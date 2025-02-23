@@ -1,0 +1,109 @@
+Guide d'Implémentation : Fusion des Applications Mandat et Analyse Économique
+=================================================================
+
+1. Structure des Fichiers
+------------------------
+Créer la structure suivante :
+/votre_dossier
+    ├── app.py                     # Point d'entrée principal
+    ├── app_tcd_mdp.py            # Fonctions pour l'analyse des mandats
+    ├── app_argus.py              # Fonctions pour l'analyse économique
+    ├── requirements.txt          # Dépendances
+    └── /pages
+        ├── 1_analyse_mandats.py   # Page d'analyse des mandats
+        └── 2_analyse_economique.py # Page d'analyse économique
+
+2. Configuration des Mots de Passe
+--------------------------------
+- Analyse des Mandats :
+  * Accès basique : "RRNPA"
+  * Accès complet : "RRNPAMDP"
+- Analyse Économique :
+  * Mot de passe unique : "RRNPAMDP"
+
+3. Fichiers Principaux
+---------------------
+
+a) app.py (Point d'entrée)
+-------------------------
+```python
+import streamlit as st
+
+st.set_page_config(
+    page_title="Application d'Analyse",
+    layout="wide"
+)
+
+st.title("Application d'Analyse")
+st.write("Utilisez le menu à gauche pour naviguer entre les différentes analyses.")
+```
+
+b) requirements.txt
+------------------
+```
+streamlit
+pandas
+plotly
+numpy
+openpyxl
+statsmodels
+scipy
+matplotlib
+```
+
+4. Pages
+--------
+
+a) pages/1_analyse_mandats.py
+----------------------------
+- Importer les fonctions depuis app_tcd_mdp.py
+- Utiliser st.tabs() pour la navigation entre les vues
+- Gérer l'authentification avec check_access_level()
+- Vues disponibles :
+  * Vue Globale (tous les accès)
+  * Vue Détaillée (tous les accès)
+  * Tableau Croisé (accès complet)
+  * Documentation (accès complet)
+  * Formules (accès complet)
+
+b) pages/2_analyse_economique.py
+-------------------------------
+- Importer les fonctions depuis app_argus.py
+- Utiliser la fonction check_password() de app_argus.py
+- Ne pas redéfinir les fonctions d'authentification
+- Garder la structure existante pour l'analyse des données
+
+5. Points Importants
+-------------------
+1. Vérifier que st.set_page_config() est appelé en premier dans chaque fichier
+2. Ne pas dupliquer les fonctions d'authentification
+3. Utiliser les imports relatifs pour les fonctions
+4. Garder les sessions states séparées pour chaque page
+
+6. Lancement de l'Application
+---------------------------
+1. Installer les dépendances :
+   pip install -r requirements.txt
+
+2. Lancer l'application :
+   streamlit run app.py
+
+7. Navigation
+------------
+- La navigation entre les pages se fait automatiquement via la sidebar Streamlit
+- Chaque page gère son propre système d'authentification
+- Les états de session sont indépendants entre les pages
+
+8. Maintenance
+-------------
+- Garder les fichiers de fonctions (app_tcd_mdp.py et app_argus.py) séparés pour faciliter la maintenance
+- Mettre à jour les requirements.txt si de nouvelles dépendances sont ajoutées
+- Documenter les changements majeurs
+
+9. Bonnes Pratiques
+------------------
+1. Toujours vérifier l'authentification au début de chaque page
+2. Utiliser des noms de variables explicites
+3. Commenter le code pour les parties complexes
+4. Gérer les erreurs avec try/except
+5. Utiliser st.cache pour les fonctions coûteuses en calcul
