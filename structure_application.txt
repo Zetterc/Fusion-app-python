@@ -1,0 +1,93 @@
+# Structure de l'Application Streamlit
+
+## 1. Organisation des Fichiers
+
+L'application est organisée en plusieurs fichiers :
+- app.py : Point d'entrée principal (page d'accueil)
+- app_tcd_mdp.py : Contient les fonctions principales
+- app_argus.py : Fonctions supplémentaires
+- mandats_bonds_new.py : Gestion des données obligataires
+- pages/
+  - 1_analyse_mandats.py : Page d'analyse des mandats
+  - 2_analyse_economique.py : Page d'analyse économique
+
+## 2. Fonctionnement de la Navigation
+
+### Comment Streamlit gère les pages :
+- Streamlit détecte automatiquement tous les fichiers .py dans le dossier "pages"
+- Les fichiers sont listés dans la barre latérale dans l'ordre des préfixes numériques (1_, 2_)
+- Le nom affiché dans la barre latérale vient soit :
+  * Du nom du fichier (sans le préfixe numérique et .py)
+  * De la configuration st.set_page_config(page_title="...")
+
+### Dans app.py :
+- Pas besoin de code spécial pour gérer les pages
+- Streamlit crée automatiquement la navigation
+- La ligne st.sidebar.success("Sélectionnez une page ci-dessus.") fait référence au menu automatique
+
+## 3. Structure des Fichiers de Pages
+
+Chaque fichier dans le dossier "pages" doit avoir :
+
+1. Configuration de la page :
+```python
+st.set_page_config(page_title="...", layout="wide")
+```
+
+2. Structure principale :
+```python
+def main():
+    # Code de la page
+    
+if __name__ == "__main__":
+    main()
+```
+
+## 4. Organisation du Code
+
+### Approche Modulaire (Recommandée) :
+- Les fonctions principales sont dans app_tcd_mdp.py
+- Les pages importent ces fonctions avec :
+  ```python
+  from app_tcd_mdp import (
+      load_data, calculate_global_metrics,
+      show_global_view, show_detailed_view
+  )
+  ```
+
+Avantages :
+- Évite la duplication de code
+- Plus facile à maintenir
+- Corrections de bugs centralisées
+- Meilleure performance (pas de code dupliqué)
+
+### Alternative Non Recommandée :
+- Mettre tout le code dans chaque fichier de pages
+- Problèmes : duplication, maintenance difficile, risque d'erreurs
+
+## 5. Bonnes Pratiques
+
+1. Garder les fichiers de pages légers :
+   - Uniquement le code spécifique à l'interface
+   - Importer les fonctions depuis les fichiers principaux
+
+2. Structure claire :
+   - Une fonction main() comme point d'entrée
+   - Pas de code global
+   - Configuration de page en premier
+
+3. Nommage des fichiers :
+   - Utiliser des préfixes numériques pour l'ordre (1_, 2_)
+   - Noms descriptifs après le préfixe
+
+## 6. Exécution
+
+Pour lancer l'application :
+1. Ouvrir un terminal
+2. Naviguer vers le dossier du projet
+3. Exécuter : streamlit run app.py
+
+Streamlit :
+- Démarre la page d'accueil (app.py)
+- Crée la barre latérale avec les pages
+- Gère la navigation automatiquement
